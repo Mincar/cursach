@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="#{welcome.title}">Title</title>
+</head>
+<body>
+<header>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark describable"
+               href="/login"
+               th:text="#{login.link.value}"
+               th:data-title="#{login.data.title}">
+                    Log in
+            </a>
+            <a class="p-2 text-dark describable" href="/register" th:text="#{register.link.text}"
+               th:data-title="#{register.data.title}">
+                    Register
+            </a>
+        </nav>
+    </div>
+</header>
+
+<div class="main-message">
+    <h1 th:text="#{welcome.message1}"></h1>
+        <br>
+    <h1 th:text="#{welcome.message2}"></h1>
+</div>
+<div class="grey-line"></div>
+
+<footer>
+</footer>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/script.js"></script>
+</html>

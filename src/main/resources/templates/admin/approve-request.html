@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head>
+        <meta charset="utf-8">
+        <title th:text="#{approve.req.title}">Approve Request</title>
+        <link rel = "icon" href ="https://www.pinclipart.com/picdir/big/163-1634137_brochure-markant-online-books-icons-clipart.png"
+              type = "image/x-icon">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+</head>
+
+<body>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal" th:text="#{a.header.welcome}">Welcome, My Lord</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark describable" th:href="${T(curs.hotel.service.util.directions.Pathes).ADMIN_MAIN.getUrl()}" th:text="#{a.header.main}">Requests</a>
+        <a class="p-2 text-dark describable" th:href="${T(curs.hotel.service.util.directions.Pathes).ADMIN_USERS.getUrl()}" th:text="#{a.header.users}">Users</a>
+        <a class="p-2 text-dark describable" th:href="${T(curs.hotel.service.util.directions.Pathes).ADMIN_BILLS.getUrl()}" th:text="#{a.header.bills}">Bills</a>
+        <a class="p-2 text-dark describable" th:href="${T(curs.hotel.service.util.directions.Pathes).ADMIN_ROOMS.getUrl()}" th:text="#{a.header.rooms}">Rooms</a>    </nav>
+    <a class="btn btn-outline-primary" th:href="${T(curs.hotel.service.util.directions.Pathes).LOGOUT.getUrl()}" th:text="#{u.header.logout}">Logout</a>
+</div>
+
+<br>
+<h3 class="m-4" th:text="#{new.req.title}">New Requests</h3>
+
+<!--<%  Request req = (Request) request.getAttribute("selected-request");%>-->
+<form th:action="${T(curs.hotel.service.util.directions.Pathes).ADMIN_APPROVE.getUrl()}" method="post" class="m-4">
+    <div class="form-row">
+        <div class="form-group col-1">
+            <label for="id">#</label>
+            <input type="number" th:value="${selected_request.getId()}" class="form-control" id="id" name="id" th:min="${selected_request.getId()}" th:max="${selected_request.getId()}">
+        </div>
+        <div class="form-group col-1">
+            <label for="places" th:text="#{approve.req.form.places}">Places</label>
+            <input type="number" th:value="${selected_request.getPlaces()}" class="form-control" id="places" name="places" disabled>
+        </div>
+        <div class="form-group col-2">
+            <label for="class" th:text="#{approve.req.form.class}">Class</label>
+            <input type="text" id="class" class="form-control" th:value="${selected_request.getRoomClass()}" name="class" disabled>
+        </div>
+        <div class="form-group col-2">
+            <label for="start-date" th:text="#{approve.req.form.start.d}">Start Date</label>
+            <input type="text" id="start-date" class="form-control" th:value="${selected_request.getStartDate()}" name="start-date" disabled />
+        </div>
+        <div class="form-group col-2">
+            <label for="end-date" th:text="#{approve.req.form.end.d}">End Date</label>
+            <input type="text" id="end-date" class="form-control" th:value="${selected_request.getEndDate()}" name="end-date" disabled />
+        </div>
+        <div class="form-group col-2">
+            <label for="room-select" th:text="#{approve.req.form.room.id}" >Room Id</label>
+            <select class="browser-default custom-select" id="room-select" name="room-select">
+                <option th:each=" r : *{page.getContent()}" th:value="${r.getId()}" th:text="${r.getId()}">
+                    Room Id
+                </option>
+<!--                <% List<Room> matchingRooms = (List<Room>) request.getAttribute("page");-->
+<!--                    for (int i = 0; i < matchingRooms.size(); i++){%>-->
+<!--                        <option value="<%=matchingRooms.get(i).getId()%>"><%=matchingRooms.get(i).getId()%></option>-->
+<!--                <%}%>-->
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary" th:text="#{approve.btn}" >Approve</button>
+</form>
+
+<a th:href="'/admin/?method=cancel&id=' + ${selected_request.getId()}">
+    <button class="btn btn-warning ml10" th:text="#{cancel.btn}" >Cancel</button>
+</a>
+
+<br>
+
+<h2>Rooms</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col" th:text="#{room.pic}" >Picture</th>
+        <th scope="col" th:text="#{room.place}">Places</th>
+        <th scope="col" th:text="#{room.room.c}">Rooms Class</th>
+        <th scope="col" th:text="#{room.price}">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr th:each=" r : *{page.getContent()}">
+            <th scope="row" th:text="${r.getId()}"> room id </th>
+                <td><img height="120px" th:src="${r.getPicURL()}" th:alt="#{room.picture.alt}"></td>
+                <td th:text="${r.getPlaces()}"> Places </td>
+                <td th:text="${r.getRoomClass().name()}"> Room Class </td>
+                <td th:text="${r.getPrice()}"> Price </td>
+        </tr>
+    </tbody>
+</table>
+<nav class="ml18" aria-label="my-nav" th:if="${page.totalPages > 0}">
+    <ul class="pagination">
+        <li th:each="i: ${#numbers.sequence(0, page.getTotalPages() - 1)}" th:classappend="${page.getNumber() == i} ? active " class="page-item">
+            <a class="page-link" th:href="'/admin/approve?page=' + ${i} + '&id=' + ${selected_request.getId()}" th:text="${i + 1}"> Page number</a>
+        </li>
+    </ul>
+</nav>
+<div class="m-4">
+<!--    <a th:href="${T(Pathes).ADMIN_MAIN.getUrl()}" th:text="#{back.to.main}">Back to main page</a>-->
+</div>
+
+
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+
+</html>

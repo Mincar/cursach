@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title th:text="#{a.header.rooms}">Rooms</title>
+    <link rel = "icon" href ="https://www.pinclipart.com/picdir/big/163-1634137_brochure-markant-online-books-icons-clipart.png"
+          type = "image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal" th:text="#{u.header.welcome.msg} + '🖖'"></h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark describable" href="/user/" th:text="#{u.header.new.req}"></a>
+        <a class="p-2 text-dark describable" href="/user/my-requests" th:text="#{u.header.all.req}"></a>
+        <a class="p-2 text-dark describable" href="/user/my-bills" th:text="#{u.header.all.bill}"></a>
+        <a class="p-2 text-dark describable" href="/user/rooms" th:text="Комнаты"></a>
+
+    </nav>
+    <a class="btn btn-outline-primary" th:href="${T(curs.hotel.service.util.directions.Pathes).LOGOUT.getUrl()}" th:text="#{u.header.logout}"></a>
+</div>
+<br>
+
+<div th:each="room : ${room}">
+
+        <div>
+
+            <div class="form-group col-2">
+                <label for="picture" th:text="Изображение">Изображение номера</label>
+                <!--<input readonly type="text" th:value="${room.getPicURL()}" class="form-control" id="picture" name="picture">-->
+                <img height="200px" th:src="${room.getPicURL()}" th:alt="#{room.picture.alt}"id="picture" name="picture">
+            </div>
+
+            <div class="form-group col-2">
+                <label for="places" th:text="Места">Количество мест</label>
+                <!--<input readonly type="number"  th:value="${room.getPlaces()}" class="form-control" id="places" name="places" min="1" max="10">-->
+                <h3 th:text="${room.getPlaces()}" id="places" name="places"></h3>
+            </div>
+
+            <div class="form-group col-2">
+                <label for="roomClass" th:text="#{select.r.class}">Класс комнаты</label>
+                <!-- <input readonly type="text"   th:value="${room.getRoomClass()}" class="form-control" id="roomClass" name="roomClass">-->
+                 <h3 th:text="${room.getRoomClass()}" id="roomClass" name="roomClass"></h3>
+             </div>
+             <div class="form-group col-2">
+                 <label for="price" th:text="Цена">Цена</label>
+                 <!--<input readonly type="number"   th:value="${room.getPrice()}" class="form-control" id="price" name="price" min="1" step="1">-->
+                <h3 th:text="${room.getPrice()}" id="price" name="price"></h3>
+            </div>
+        </div>
+
+
+</div>
+
+
+
+</body>
+<script>
+    function up(e) {
+        if (e.value.indexOf(".") != '-1') {
+            e.value=e.value.substring(0, e.value.indexOf(".") + 2);
+        }
+    }
+</script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</html>

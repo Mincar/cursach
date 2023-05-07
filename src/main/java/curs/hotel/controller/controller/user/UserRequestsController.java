@@ -1,0 +1,63 @@
+package curs.hotel.controller.controller.user;
+
+import curs.hotel.service.security.HotelUserDetails;
+import curs.hotel.service.util.directions.Pathes;
+import curs.hotel.service.view.user.UserRequestsService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Slf4j
+@Controller
+public class UserRequestsController {
+    private final UserRequestsService service;
+
+    @Autowired
+    public UserRequestsController(UserRequestsService service) { this.service = service; }
+
+
+
+    @GetMapping("/user/my-requests")
+    public String getRequests(Authentication authentication,
+                              @RequestParam(value = "method", required = false) String method,
+                              @RequestParam(value = "req_id", required = false) String id,
+                              @PageableDefault( sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                              Model model) {
+        if (method != null && id != null && method.equals("cancel")) {
+                service.cancel(id);
+        }
+
+        if (authentication != null) {
+            service.paginate((HotelUserDetails)authentication.getPrincipal(), model, pageable);
+        } else {
+            log.error("Authentication object ir null: unauthorized access!");
+        }
+        return Pathes.USER_REQUESTS.getCropPagePath();
+    }
+
+    @PostMapping("/user/make-request")
+    public String makeRequest(Authentication authentication,
+                              @RequestParam("places") String pl,
+                              @RequestParam("class") String clazz,
+                              @RequestParam("daterange") String daterange) {
+        log.info("Retrieving data from request...");
+        if (authentication != null) {
+            service.newRequest((HotelUserDetails)authentication.getPrincipal(), pl, clazz, daterange);
+        } else {
+            log.error("Authentication object ir null: unauthorized access!");
+        }
+
+
+        return "redirect:" + Pathes.USER_MAIN.getUrl();
+    }
+
+}
